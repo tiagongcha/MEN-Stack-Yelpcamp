@@ -33,19 +33,25 @@
 		</div>
 	</nav>
 
+	<!-- form main body -->
+
+		<h1 style="text-align: center">Create New Campground</h1>
+		<form action="/campground" method = "post">
+			<div class="form-group">
+				<label for="inputname">New Campground</label>
+				<input class="form-control" type="text" name="name" placeholder="new campground">
+			</div>
+			<div class="form-group">
+				<label for="inputname">Image Source</label>
+				<input class="form-control" type="text" name="img" placeholder="url">
+			</div>
+			<div class="form-group">
+				<label for="inputname">Description</label>
+				<input class="form-control" type="text" name="description" placeholder="description">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
 	
-	<h1 style="text-align: center">Create New Campground</h1>
-	<form action="/campground" method = "post">
-		<div class="form-group">
-			<label for="inputname">New Campground</label>
-			<input class="form-control" type="text" name="name" placeholder="new campground">
-		</div>
-		<div class="form-group">
-			<label for="inputname">Image Source</label>
-			<input class="form-control" type="text" name="img" placeholder="url">
-		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
 </div>
 
 <% include partials/footer %>

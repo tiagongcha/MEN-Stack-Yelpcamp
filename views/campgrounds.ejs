@@ -33,6 +33,7 @@
 		</div>
 	</nav>
 <!-- jumbotron text box -->
+  <div class="container">
 	<div class="jumbotron text-center">
 		<h1>All Camping Tips Ideas</h1>
 		<p>Browser New Ideas For Your Next Camping Trip</p>
@@ -41,7 +42,7 @@
 <!-- photo gallery -->
 	<div class="row">
 		<% campgrounds.forEach(function(x){ %>		
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<div class="thumbnail">
 					<img class="img-thumbnail img-fluid" src="<%= x.img %>" style="width:100%">
 					<div class="caption">
@@ -51,8 +52,8 @@
 			</div>					
 		<% }); %>
 	</div>	
+	</div>
 </div>
-
 
 <% include partials/footer %>
 	
