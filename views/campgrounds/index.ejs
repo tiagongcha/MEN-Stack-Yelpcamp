@@ -1,0 +1,32 @@
+<% include ../partials/header %>
+<div class="container-fluid">
+
+<!-- jumbotron text box -->
+  <div class="container">
+	<div class="jumbotron text-center">
+		<h1>All Camping Tips Ideas</h1>
+		<p>Browser New Ideas For Your Next Camping Trip</p>
+		<a class="btn btn-primary btn-lg" href="/campground/newCamp">Suggest New Campground</a>
+	</div>
+<!-- photo gallery -->
+	<div class="row">
+		<% campgrounds.forEach(function(x){ %>		
+			<div class="col-md-3">
+				<div class="thumbnail">
+					<img class="img-thumbnail img-fluid" src="<%= x.img %>" style="width:100%">
+					<div class="caption">
+						<p class="text-center"> <%= x.name %></p>
+					</div>
+					<p class="text-center">
+						<!-- href is the reason not to use a button here -->
+						<a href="/campground/<%= x._id%>" class="btn btn-primary">More Info</a>
+					</p>
+				</div>
+			</div>					
+		<% }); %>
+	</div>	
+	</div>
+</div>
+
+<% include ../partials/footer %>
+	

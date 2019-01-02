@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 
 // import self-defined modules:
 var Campground = require("./models/campground.js");
-// var comment = require("./models/comment.js");
+var Comment = require("./models/comment.js");
 // var user = require("./models/user.js");
 var seedDB = require("./seeds.js");
 seedDB();
@@ -23,20 +23,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
 
 
-// Campground.create(
-// 	{name:"Granite Hill", 
-// 	img: "https://pixabay.com/get/e835b20e29f0003ed1584d05fb1d4e97e07ee3d21cac104491f5c779a4edbdbd_340.jpg",
-// 	description: "a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur"	
-// 	},
-// 	function(err, campground){
-// 		if(err){
-// 			console.log("err");
-// 		}else{
-// 			console.log(campground);
-// 		}
-// 	});
-
-
 //get landing page route:
 app.get("/", function(req, res){
 	res.render("landing");
@@ -49,17 +35,17 @@ app.get("/campground", function(req, res){
 		if(err){
 			console.log(err);
 		}else{
-			res.render("index", {campgrounds: allCampgrounds});
+			res.render("campgrounds/index", {campgrounds: allCampgrounds});
 		}
 	})
 });
 
-//render the form page:
+//RENDER the form page:
 app.get("/campground/newCamp", function(req,res){
-	res.render("newCamp");
+	res.render("campgrounds/newCamp");
 });
 
-//post client's input to campground page:
+//POST client's input to campground page:
 app.post("/campground", function(req, res){
 	//get the new campground data from the form and append it to the campground list/DB:
 	var name = req.body.name;
@@ -77,18 +63,56 @@ app.post("/campground", function(req, res){
 	});
 });
 
-//show one object in db:
+//SHOW one object in db:
 app.get("/campground/:id", function(req,res){
 	//find the campground with provided ID
-	Campground.findById(req.params.id, function(err, thiscamp){
+	Campground.findById(req.params.id).populate("comments").exec(function(err, thiscamp){
 		if (err) {
 			console.log(err);
 		}else{
 			//render show template with that campground
-			res.render("show", {campground: thiscamp});
+			res.render("campgrounds/show", {campground: thiscamp});
 		}
 	});
 });
+
+//===================
+// Comments Routes
+//===================
+app.get("/campground/:id/comments/new", function(req, res){
+	// find campground by id:
+	Campground.findById(req.params.id, function(err, campground){
+		if(err){
+			console.log(err);
+		}else{
+			res.render("comments/new", {campground: campground});
+		}
+	})
+	
+});
+
+app.post("/campground/:id/comments", function(req, res){
+	// find campground by id
+	Campground.findById(req.params.id, function(err, campground){
+		if(err){
+			console.log("err in finding comment page id");
+			res.redirect("/campground");
+		}else{
+			 console.log(req.body.comment);
+			 Comment.create(req.body.comment, function(err, comment){
+			 	if(err){
+			 		console.log("err in adding comment");
+			 	}else{
+			 		campground.comments.push(comment);
+			 		campground.save();
+			 		res.redirect('/campground/' + campground._id);
+			 	}
+			 })
+		}
+	})
+})
+
+
 
 app.listen(3000, ()=>{
 	console.log("yelpcamp server has started");

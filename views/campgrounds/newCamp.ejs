@@ -1,6 +1,6 @@
-<% include partials/header %>
-<div class="container-fluid">
-<!-- nav bar -->
+<% include ../partials/header %>
+<div class="container">
+	<!-- nav bar -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<a class="navbar-brand" href="/">YelpCamp</a>
 		<div class = "collapse navbar-collapse" id="navbarSupportedContent">
@@ -32,32 +32,26 @@
 			</ul>		
 		</div>
 	</nav>
-<!-- jumbotron text box -->
-  <div class="container">
-	<div class="jumbotron text-center">
-		<h1>All Camping Tips Ideas</h1>
-		<p>Browser New Ideas For Your Next Camping Trip</p>
-		<a class="btn btn-primary btn-lg" href="/campground/newCamp">Suggest New Campground</a>
-	</div>
-<!-- photo gallery -->
-	<div class="row">
-		<% campgrounds.forEach(function(x){ %>		
-			<div class="col-md-3">
-				<div class="thumbnail">
-					<img class="img-thumbnail img-fluid" src="<%= x.img %>" style="width:100%">
-					<div class="caption">
-						<p class="text-center"> <%= x.name %></p>
-					</div>
-					<p class="text-center">
-						<!-- href is the reason not to use a button here -->
-						<a href="/campground/<%= x._id%>" class="btn btn-primary">More Info</a>
-					</p>
-				</div>
-			</div>					
-		<% }); %>
-	</div>	
-	</div>
+
+	<!-- form main body -->
+
+		<h1 style="text-align: center">Create New Campground</h1>
+		<form action="/campground" method = "post">
+			<div class="form-group">
+				<label for="inputname">New Campground</label>
+				<input class="form-control" type="text" name="name" placeholder="new campground">
+			</div>
+			<div class="form-group">
+				<label for="inputname">Image Source</label>
+				<input class="form-control" type="text" name="img" placeholder="url">
+			</div>
+			<div class="form-group">
+				<label for="inputname">Description</label>
+				<input class="form-control" type="text" name="description" placeholder="description">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	
 </div>
 
-<% include partials/footer %>
-	
+<% include ../partials/footer %>
