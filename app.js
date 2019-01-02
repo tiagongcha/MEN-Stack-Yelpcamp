@@ -3,8 +3,15 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 
+// import self-defined modules:
+var Campground = require("./models/campground.js");
+// var comment = require("./models/comment.js");
+// var user = require("./models/user.js");
+var seedDB = require("./seeds.js");
+seedDB();
+
 //create yelpcamp database inside mongodb:
-mongoose.connect("mongodb://localhost/yelp_camp");
+mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 //check if connection is successful or not:
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -12,30 +19,22 @@ db.once('open', function() {
   console.log("we're connected");
 });
 
-
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
 
-//schema setup:
-var campgroundSchema = new mongoose.Schema({
-	name: String,
-	img: String,
-	description: String
-});
 
-var Campground = mongoose.model("Campground", campgroundSchema);
-Campground.create(
-	{name:"Granite Hill", 
-	img: "https://pixabay.com/get/e835b20e29f0003ed1584d05fb1d4e97e07ee3d21cac104491f5c779a4edbdbd_340.jpg",
-	description: "a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur"	
-	},
-	function(err, campground){
-		if(err){
-			console.log("err");
-		}else{
-			console.log(campground);
-		}
-	});
+// Campground.create(
+// 	{name:"Granite Hill", 
+// 	img: "https://pixabay.com/get/e835b20e29f0003ed1584d05fb1d4e97e07ee3d21cac104491f5c779a4edbdbd_340.jpg",
+// 	description: "a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur"	
+// 	},
+// 	function(err, campground){
+// 		if(err){
+// 			console.log("err");
+// 		}else{
+// 			console.log(campground);
+// 		}
+// 	});
 
 
 //get landing page route:
