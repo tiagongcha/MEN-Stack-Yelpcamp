@@ -1,9 +1,8 @@
 var mongoose = require("mongoose");
 var Campground = require("./models/campground.js");
+mongoose.Promise = global.Promise;
 
 function seedDB(){
-
-
 	//create some data:
 	var camps = [
 	{
@@ -24,23 +23,16 @@ function seedDB(){
 	}
 	];
 
-	// var promise = new Promise(function(resolve, reject){
-		
-	// })
+	
+	
+	Campground.deleteMany({})
+		.then(camps.forEach(function(camp){
+			var newCamp = new Campground(camp);
+			return newCamp.save();
+		}))
+			.then(console.log("add new camp ground"))
+				.catch((err) => {console.log("error: ", err)});
 
-
-	Campground.deleteMany({}, function(err){
-		if(err){
-			console.log(err);
-		}
-		console.log("remove campgrounds");
-	});
-
-	camps.forEach(function(camp){
-		var newCamp = new Campground(camp);
-		newCamp.save();
-		console.log("add new camp ground");
-	});
 	//seeded!
 	console.log("database seeded");
 }
