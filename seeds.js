@@ -24,12 +24,14 @@ function seedDB(){
 	}
 	];
 
+	// Something to note when using Promises in combination with Mongoose async operations is that Mongoose queries are not Promises. 
+	// Queries do return a thenable, but if you need a real Promise you should use the exec method.
 	
-	
-	Campground.deleteMany({})
-		.then(Comment.deleteMany({}))
+	Campground.deleteMany({}).exec()
+		.then(function(){return Comment.deleteMany({}).exec()})
 			.then(camps.forEach(function(camp){
 				var newCamp = new Campground(camp);
+				console.log(newCamp);
 				return newCamp.save();
 			}))
 				.then(console.log("add new camp ground"))
