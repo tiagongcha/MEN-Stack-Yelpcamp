@@ -31,7 +31,7 @@ function seedDB(){
 		.then(function(){return Comment.deleteMany({}).exec()})
 			.then(camps.forEach(function(camp){
 				var newCamp = new Campground(camp);
-				console.log(newCamp);
+				// console.log(newCamp);
 				return newCamp.save();
 			}))
 				.then(console.log("add new camp ground"))
