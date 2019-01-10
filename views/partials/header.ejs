@@ -23,16 +23,21 @@
 			</ul>
 			<!-- float right nav items -->
 			<ul class="nav navbar-nav ml-auto">
+				<%if(!currentUser){%>
 				<li style="margin-right: 20px">
 					<a href="/register">SignUp</a>
 				</li>
 				<li style="margin-right: 20px">
 					<a href="/login">Login</a>
 				</li>
+				<%}else{%>
+				<li style="margin-right: 20px">
+					<a href="#">User: <%= currentUser.username %></a>
+				</li>
 				<li style="margin-right: 20px">
 					<a href="/logout">Logout</a>
 				</li>
-							
+			<%}	%>						
 			</ul>
 			<!-- float right nav form -->
 			<ul class="nav navbar-nav ">
