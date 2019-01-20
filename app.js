@@ -6,6 +6,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var session = require("express-session");
 var methodOverride = require("method-override");
+var flash = require("connect-flash");
 
 // import self-defined modules:
 var Campground = require("./models/campground.js");
@@ -27,6 +28,8 @@ db.once('open', function() {
   console.log("we're connected");
 });
 
+app.use(flash());
+
 //passport configuration:
 app.use(session({ secret: "cats", resave:false, saveUninitialized:false}));
 app.use(passport.initialize());
@@ -36,24 +39,21 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
+app.use(express.static(__dirname + '/public'));
 // set up view engine:
 app.set("view engine", "ejs");
 
 // add our own middleware:
 app.use(function(req,res,next){
+	res.locals.error = req.flash("error");
+ 	res.locals.success = req.flash("success");
 	res.locals.currentUser = req.user;
-	// res.locals.error = req.flash("error");
- //    res.locals.success = req.flash("success");
 	next();
 });
 app.use(bodyParser.urlencoded({extended:true}));
 app.use("/", indexRoutes);
 app.use("/campground/:id/comments",commentRoutes);
 app.use("/campground",campgroundRoutes);
-
-
-
 
 app.listen(3000, ()=>{
 	console.log("yelpcamp server has started");

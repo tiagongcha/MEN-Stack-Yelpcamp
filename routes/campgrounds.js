@@ -1,12 +1,13 @@
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campground");
+var middleWare = require("../middleware/index.js");
 
 //INDEX - get the campground page listing all camp grounds
 router.get("/", function(req, res){
 	Campground.find({}, function(err, allCampgrounds){
 		if(err){
-			console.log(err);
+			console.log("index page error");
 		}else{
 			res.render("campgrounds/index", {campgrounds: allCampgrounds});
 		}
@@ -14,12 +15,12 @@ router.get("/", function(req, res){
 });
 
 //NEW the form page:
-router.get("/newCamp",isLoggedIn, function(req,res){
+router.get("/newCamp", middleWare.isLoggedIn, function(req,res){
 	res.render("campgrounds/newCamp");
 });
 
 //CREATE client's input to campground page:
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleWare.isLoggedIn, function(req, res){
 	//get the new campground data from the form and append it to the campground list/DB:
 	var name = req.body.name;
 	var img = req.body.img;
@@ -56,14 +57,14 @@ router.get("/:id", function(req,res){
 });
 
 // EDIT campground route
-router.get("/:id/edit", checkOwnership,function(req, res){	
+router.get("/:id/edit", middleWare.checkOwnership,function(req, res){	
 	Campground.findById(req.params.id, function(err, thiscamp){		
 		res.render("campgrounds/edit", {campground: thiscamp});
 	});
 });
 
 // UPDATE campground route
-router.put("/:id",checkOwnership, function(req,res){
+router.put("/:id", middleWare.checkOwnership, function(req,res){
 	// find and update the correct campground:
 	Campground.findByIdAndUpdate(req.params.id, req.body.edited, function(err,update){
 		if(err){
@@ -77,7 +78,7 @@ router.put("/:id",checkOwnership, function(req,res){
 });
 
 // DESTROY campground route:
-router.delete("/:id",checkOwnership,function(req,res){
+router.delete("/:id", middleWare.checkOwnership,function(req,res){
 	Campground.findByIdAndRemove(req.params.id, function(err, removedCamp){
 		if(err){
 			console.log("prob deleting");
@@ -87,35 +88,5 @@ router.delete("/:id",checkOwnership,function(req,res){
 		}
 	})
 });
-
-// define middlewares:
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login")
-}
-
-function checkOwnership(req, res, next){
-	if(req.isAuthenticated){	
-		Campground.findById(req.params.id, function(err, thiscamp){
-			if(err){
-				// req.flash("error", "Campground not found.");
-				res.redirect("back");
-			}else{
-				if(thiscamp.author.id.equals(req.user._id)){
-					next();
-				}else{
-					// req.flash("error", "You do not have the permission to do that!");
-					res.redirect("back");
-				}				
-			}
-		});
-	}else{
-		req.flash("error", "Please Login First.");
-		res.redirect("back");
-	}
-}
-
 
 module.exports = router;

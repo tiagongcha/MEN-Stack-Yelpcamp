@@ -29,18 +29,20 @@ router.post("/register", function(req, res){
 });
 
 router.get("/login", function(req,res){
-	res.render("login")
+	res.render("login", {message: req.flash("error")});
 });
 
-router.post("/login",passport.authenticate("local", {
+router.post("/login", passport.authenticate("local", {
 	successRedirect:"/campground",
 	failureRedirect:"/login"
 }),function(req,res){});
 
 router.get("/logout", function(req, res){
 	req.logout();
+	req.flash("error", "Logged you out!")
 	res.redirect("/campground");
 });
+
 // define a middleware:
 function isLoggedIn(req,res,next){
 	if(req.isAuthenticated()){
